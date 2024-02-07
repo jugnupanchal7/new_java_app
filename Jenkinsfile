@@ -9,12 +9,6 @@ pipeline {
 			}
 		}
 
-		stage ("Installing git") {
-			steps {
-				sh 'sudo yum install -y git'
-			}
-		}
-
 		stage ("Build the code") {
 			steps {
 				sh 'sudo mvn dependency:purge-local-repository'
