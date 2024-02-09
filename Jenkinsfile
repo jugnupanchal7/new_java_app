@@ -16,7 +16,7 @@ pipeline {
 			}
 		}
 		
-		stage ("Creating docker image") {
+		stage ("Creating Docker Image") {
 			steps {
 				sh 'sudo docker build -t java-app:$BUILD_TAG .'
 				sh 'sudo docker tag java-app:$BUILD_TAG jugnupanchal/java-app:$BUILD_TAG'
@@ -32,9 +32,9 @@ pipeline {
 			}
 		}
 
-		stage ("Testing the build") {
+		stage ("Testing the Build") {
 			steps {
-				sh 'sudo docker run -dit --name java-test:$BUILD_TAG -p 8082:8080 jugnupanchal/java-app:$BUILD_TAG'
+				sh 'sudo docker run -dit --name java-test$BUILD_TAG -p 8082:8080 jugnupanchal/java-app:$BUILD_TAG'
 			}
 		}
 
