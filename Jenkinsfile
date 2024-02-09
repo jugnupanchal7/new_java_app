@@ -44,24 +44,14 @@ pipeline {
 			}
 		}
 
-		stage ("Approval from QAT") {
-			steps {
-				script {
-					Boolean userInput = input(id: 'Proceed1', message: 'Do you want to Promote this build?', parameters: [[$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']])
-                				echo 'userInput: ' + userInput
-				}
-			}
-		}
-
 		stage ("Production ENV") {
 			steps {
 				sshagent(credentials:['sshagent-cred']) {
-			    	 	sh "ssh -o StrictHostKeyChecking=no ubuntu@13.213.48.76 sudo docker run  -dit  -p  :8080  jugnupanchal/java-app:$BUILD_TAG"
+			    	 	sh "ssh -o StrictHostKeyChecking=no ubuntu@13.213.48.76 sudo docker run  -dit  -p  49153:8080  jugnupanchal/java-app:$BUILD_TAG"
 				}
 			}
 		}
 
 
 	}
-}
 
