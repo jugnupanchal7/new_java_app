@@ -40,7 +40,7 @@ pipeline {
 
 		stage ("QAT testing") {
 			steps {
-				sh 'sudo curl --silent http://3.108.64.245:8080/java-web-app'
+				sh 'sudo curl --silent http://3.108.64.245:8080/java-web-app/'
 			}
 		}
 
@@ -56,7 +56,7 @@ pipeline {
 		stage ("Production Env") {
 			steps {
 				sshagent(['sshagent-cred']) {
-			    	 	sh "ssh -o StrictHostKeyChecking=no ubuntu@13.213.48.76 sudo docker run  -d  -p  :8080  jugnupanchal/java-app:$BUILD_TAG"
+			    	 	sh "ssh -o StrictHostKeyChecking=no ubuntu@13.213.48.76 sudo docker run  -dit  -p  :8080  jugnupanchal/java-app:$BUILD_TAG"
 				}
 			}
 		}
