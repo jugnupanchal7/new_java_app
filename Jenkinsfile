@@ -40,9 +40,18 @@ pipeline {
 
 		stage ("QAT testing") {
 			steps {
-				sh 'sudo echo --silent http://3.108.64.245:8082/java-web-app/'
+				sh 'sudo curl --silent http://3.108.64.245:8082/java-web-app/'
 			}
 		}
+
+		stage ("Approval status") {
+				steps {
+					script {
+						 Boolean userInput = input(id: 'Proceed1', message: 'Do you want to Promote this build?', parameters: [[$class: 'BooleanParameterDefinition', defaultValue: false, description: '', name: 'Please confirm you agree with this']])
+                				echo 'userInput: ' + userInput
+					}
+				}
+			}
 
 		stage ("Production ENV") {
 			steps {
