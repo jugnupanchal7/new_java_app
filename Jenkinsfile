@@ -34,15 +34,33 @@ pipeline {
 
 		stage ("Testing the build") {
 			steps {
-				sh 'sudo docker run -dit --name java-test$BUILD_TAG -p 8081:8080 jugnupanchal/java-app:$BUILD_TAG'
+				sh 'sudo docker run -dit --name java-test$BUILD_TAG -p 8082:8080 jugnupanchal/java-app:$BUILD_TAG'
 			}
 		}
 
 		stage ("QAT testing") {
 			steps {
-				sh 'sudo curl --silent http://3.110.168.117:8080/java-web-app'
+				sh 'sudo curl --silent http://3.108.64.245:8080/java-web-app'
 			}
 		}
+
+		stage ("Approval from QAT") {
+			steps {
+				script {
+					Boolean userInput = input(id: 'Proceed1', message: 'Do you want to Promote this build?', parameters: [[$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']])
+                				echo 'userInput: ' + userInput
+				}
+			}
+		}
+
+		stage ("Production Env") {
+			steps {
+				sshagent(['sshagent-cred']) {
+			    	 	sh "ssh -o StrictHostKeyChecking=no ubuntu@13.213.48.76 sudo docker run  -d  -p  :8080  jugnupanchal/java-app:$BUILD_TAG"
+				}
+			}
+		}
+
 
 	}
 }
