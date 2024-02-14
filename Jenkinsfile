@@ -34,13 +34,13 @@ pipeline {
 
 		stage ("Testing the Build") {
 			steps {
-				sh 'sudo docker run -dit --name java-test$BUILD_TAG -p 8082:8080 jugnupanchal/java-app:$BUILD_TAG'
+				sh 'sudo docker run -dit --name java-test$BUILD_TAG -p 8080:8080 jugnupanchal/java-app:$BUILD_TAG'
 			}
 		}
 
 		stage ("QAT testing") {
 			steps {
-				sh 'sudo curl --silent http://3.108.64.245:8082/java-web-app/'
+				sh 'sudo curl --silent http://3.7.73.195:8080/java-web-app/ | grep -i -E (india|sr)'
 			}
 		}
 
@@ -56,7 +56,7 @@ pipeline {
 		stage ("Production ENV") {
 			steps {
 				sshagent(credentials:['sshagent-cred']) {
-			    	 	sh "ssh -o StrictHostKeyChecking=no ubuntu@13.213.48.76 sudo docker run  -dit  -p  49153:8080  jugnupanchal/java-app:$BUILD_TAG"
+			    	 	sh "ssh -o StrictHostKeyChecking=no ubuntu@54.151.231.204 sudo docker run  -dit  -p  49153:8080  jugnupanchal/java-app:$BUILD_TAG"
 				}
 			}
 		}
