@@ -40,14 +40,14 @@ pipeline {
 
 		stage ("QAT testing") {
 			steps {
-				sh 'sudo curl --silent http://3.7.73.195:8080/java-web-app/ | grep -i -E (india|sr)'
+				sh 'sudo curl --silent http://3.7.73.195:8080/java-web-app/'
 			}
 		}
 
 		stage ("Approval status") {
 				steps {
 					script {
-						 Boolean userInput = input(id: 'Proceed1', message: 'Do you want to Promote this build?', parameters: [[$class: 'BooleanParameterDefinition', defaultValue: false, description: '', name: 'Please confirm you agree with this']])
+						 Boolean userInput = input(id: 'Proceed1', message: 'Do you want to Promote this build?', parameters: [[$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']])
                 				echo 'userInput: ' + userInput
 					}
 				}
@@ -56,7 +56,7 @@ pipeline {
 		stage ("Production ENV") {
 			steps {
 				sshagent(credentials:['sshagent-cred']) {
-			    	 	sh "ssh -o StrictHostKeyChecking=no ubuntu@54.151.231.204 sudo docker run  -dit  -p  49153:8080  jugnupanchal/java-app:$BUILD_TAG"
+			    	 	sh "ssh -o StrictHostKeyChecking=no ubuntu@54.151.231.204 sudo docker run  -dit  -p  :8080  jugnupanchal/java-app:$BUILD_TAG"
 				}
 			}
 		}
